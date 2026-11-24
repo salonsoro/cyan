@@ -24,7 +24,6 @@ if(MSVC)
                                           /permissive-
                                           /Zc:preprocessor
                                           /Zc:__cplusplus
-                                          /Zc:checkGwOdr
                                           )
 endif()
 
