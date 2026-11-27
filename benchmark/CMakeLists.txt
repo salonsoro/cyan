@@ -1,20 +1,34 @@
-function(cyan_benchmark
-         BENCH_SOURCE
-         )
-    cmake_path(ABSOLUTE_PATH BENCH_SOURCE
-               BASE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-               NORMALIZE
-               OUTPUT_VARIABLE TEST_SOURCE_ABS)
-    file(RELATIVE_PATH REL_PATH
-         "${CMAKE_CURRENT_SOURCE_DIR}" "${TEST_SOURCE_ABS}")    
-    string(MAKE_C_IDENTIFIER "${REL_PATH}"
-           TARGET_SUFFIX)
+function(
+    cyan_benchmark
+    BENCH_SOURCE
+)
+    cmake_path(
+        ABSOLUTE_PATH BENCH_SOURCE
+        BASE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        NORMALIZE
+        OUTPUT_VARIABLE BENCH_SOURCE_ABS
+    )
+    file(
+        RELATIVE_PATH REL_PATH "${CMAKE_CURRENT_SOURCE_DIR}"
+        "${BENCH_SOURCE_ABS}"
+    )    
+    string(MAKE_C_IDENTIFIER "${REL_PATH}" TARGET_SUFFIX)
     set(TARGET_NAME "cyan_bench_${TARGET_SUFFIX}")
-    set_property(GLOBAL APPEND PROPERTY cyan_bench_commands_global COMMAND "$<TARGET_FILE:${TARGET_NAME}>")
+    set_property(
+        GLOBAL APPEND
+        PROPERTY cyan_bench_commands_global
+        COMMAND "$<TARGET_FILE:${TARGET_NAME}>"
+    )
 
-    add_executable(${TARGET_NAME} "${TEST_SOURCE_ABS}" ${ARGN})
-    target_link_libraries(${TARGET_NAME} PRIVATE Cyan::Cyan)
-    target_compile_definitions(${TARGET_NAME} PRIVATE $<$<CONFIG:RelWithDebInfo>:CYAN_BENCH_RDI=>)
+    add_executable(${TARGET_NAME} "${BENCH_SOURCE_ABS}" ${ARGN})
+    target_link_libraries(${TARGET_NAME} PRIVATE
+        Cyan::Cyan
+    )
+    target_compile_definitions(${TARGET_NAME} PRIVATE
+        $<$<CONFIG:RelWithDebInfo>
+            CYAN_BENCH_RDI=
+        >
+    )
     
     if(MSVC)
         target_compile_options(${TARGET_NAME} PRIVATE
