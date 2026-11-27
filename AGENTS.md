@@ -43,6 +43,7 @@ The repository contains the following primary areas:
 
 - `source/`: Cyan's implementation and public interfaces.
 - `test/`: Automated tests and verification of Cyan's functionality.
+- `benchmark/`: Automated benchmarks generating a chart.
 - `doc/`: Cyan's documented features.
 
 Additional directories should be inspected directly before making assumptions about their purpose.

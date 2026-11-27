@@ -20,12 +20,36 @@ jobs:
         run: /bin/zsh -i -c "brew install lld"
         shell: bash
 
-      - name: CMake Clang configuration
-        run: /bin/zsh -i -c "cmake -B Build -S . -G Ninja -D BUILD_TESTING=On -D CMAKE_BUILD_TYPE=Debug -D CMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++ -D CMAKE_LINKER=/opt/homebrew/opt/lld/bin/lld"
+      - name: CMake Clang debug configuration
+        run: /bin/zsh -i -c "cmake -B Build/Debug -S . -G Ninja -D BUILD_TESTING=On -D BUILD_BENCHMARKING=On -D CMAKE_BUILD_TYPE=Debug -D CMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++ -D CMAKE_LINKER=/opt/homebrew/opt/lld/bin/lld"
         shell: bash
 
-      - name: CMake Clang build
-        run: /bin/zsh -i -c "cmake --build Build --target CYAN_RUN_TESTS"
+      - name: CMake Clang debug build
+        run: /bin/zsh -i -c "cmake --build Build/Debug --target CYAN_RUN_TESTS"
+        shell: bash
+
+      - name: CMake Clang debug benchmarks
+        run: /bin/zsh -i -c "cmake --build Build/Debug --target CYAN_RUN_BENCHMARKS"
+        shell: bash
+
+      - name: CMake Clang release with debug information configuration
+        run: /bin/zsh -i -c "cmake -B Build/RDI -S . -G Ninja -D BUILD_BENCHMARKING=On -D CMAKE_BUILD_TYPE=RelWithDebInfo -D CMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++ -D CMAKE_LINKER=/opt/homebrew/opt/lld/bin/lld"
+        shell: bash
+
+      - name: CMake Clang release with debug information benchmarks
+        run: /bin/zsh -i -c "cmake --build Build/RDI --target CYAN_RUN_BENCHMARKS"
+        shell: bash
+
+      - name: CMake Clang release configuration
+        run: /bin/zsh -i -c "cmake -B Build/Release -S . -G Ninja -D BUILD_TESTING=On -D BUILD_BENCHMARKING=On -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++ -D CMAKE_LINKER=/opt/homebrew/opt/lld/bin/lld"
+        shell: bash
+
+      - name: CMake Clang release build
+        run: /bin/zsh -i -c "cmake --build Build/Release --target CYAN_RUN_TESTS"
+        shell: bash
+
+      - name: CMake Clang release benchmarks
+        run: /bin/zsh -i -c "cmake --build Build/Release --target CYAN_RUN_BENCHMARKS"
         shell: bash
 
   windows_build:
@@ -40,12 +64,36 @@ jobs:
         with:
           arch: x64
 
-      - name: CMake MSVC configuration
-        run: cmake -B Build -S . -G Ninja -D BUILD_TESTING=On -D CMAKE_BUILD_TYPE=Debug -D CMAKE_CXX_COMPILER=cl -D CMAKE_LINKER=link
+      - name: CMake MSVC debug configuration
+        run: cmake -B Build/Debug -S . -G Ninja -D BUILD_TESTING=On -D BUILD_BENCHMARKING=On -D CMAKE_BUILD_TYPE=Debug -D CMAKE_CXX_COMPILER=cl -D CMAKE_LINKER=link
         shell: powershell
 
-      - name: CMake MSVC build
-        run: cmake --build Build --target CYAN_RUN_TESTS
+      - name: CMake MSVC debug tests
+        run: cmake --build Build/Debug --target CYAN_RUN_TESTS
+        shell: powershell
+      
+      - name: CMake MSVC debug benchmarks
+        run: cmake --build Build/Debug --target CYAN_RUN_BENCHMARKS
+        shell: powershell
+
+      - name: CMake MSVC release with debug information configuration
+        run: cmake -B Build/RDI -S . -G Ninja -D BUILD_BENCHMARKING=On -D CMAKE_BUILD_TYPE=RelWithDebInfo -D CMAKE_CXX_COMPILER=cl -D CMAKE_LINKER=link
+        shell: powershell
+      
+      - name: CMake MSVC release with debug information benchmarks
+        run: cmake --build Build/RDI --target CYAN_RUN_BENCHMARKS
+        shell: powershell
+
+      - name: CMake MSVC release configuration
+        run: cmake -B Build/Release -S . -G Ninja -D BUILD_TESTING=On -D BUILD_BENCHMARKING=On -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_COMPILER=cl -D CMAKE_LINKER=link
+        shell: powershell
+
+      - name: CMake MSVC release tests
+        run: cmake --build Build/Release --target CYAN_RUN_TESTS
+        shell: powershell
+      
+      - name: CMake MSVC release benchmarks
+        run: cmake --build Build/Release --target CYAN_RUN_BENCHMARKS
         shell: powershell
 
   linux_build:
@@ -80,10 +128,34 @@ jobs:
         run: pacman -S --noconfirm ninja
         shell: bash
       
-      - name: CMake GCC configuration
-        run: cmake -B Build -S . -G Ninja -D BUILD_TESTING=On -D CMAKE_BUILD_TYPE=Debug
+      - name: CMake GCC debug configuration
+        run: cmake -B Build/Debug -S . -G Ninja -D BUILD_TESTING=On -D BUILD_BENCHMARKING=On -D CMAKE_BUILD_TYPE=Debug
         shell: bash
 
-      - name: CMake GCC build
-        run: cmake --build Build --target CYAN_RUN_TESTS
+      - name: CMake GCC debug tests
+        run: cmake --build Build/Debug --target CYAN_RUN_TESTS
+        shell: bash
+
+      - name: CMake GCC debug benchmarks
+        run: cmake --build Build/Debug --target CYAN_RUN_BENCHMARKS
+        shell: bash
+
+      - name: CMake GCC release with debug information configuration
+        run: cmake -B Build/RDI -S . -G Ninja -D BUILD_BENCHMARKING=On -D CMAKE_BUILD_TYPE=RelWithDebInfo
+        shell: bash
+
+      - name: CMake GCC release with debug information benchmarks
+        run: cmake --build Build/RDI --target CYAN_RUN_BENCHMARKS
+        shell: bash
+
+      - name: CMake GCC release configuration
+        run: cmake -B Build/Release -S . -G Ninja -D BUILD_TESTING=On -D BUILD_BENCHMARKING=On -D CMAKE_BUILD_TYPE=Release
+        shell: bash
+
+      - name: CMake GCC release tests
+        run: cmake --build Build/Release --target CYAN_RUN_TESTS
+        shell: bash
+
+      - name: CMake GCC release benchmarks
+        run: cmake --build Build/Release --target CYAN_RUN_BENCHMARKS
         shell: bash

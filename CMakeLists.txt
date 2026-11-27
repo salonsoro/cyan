@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.30 FATAL_ERROR)
 set(CMAKE_CXX_EXTENSIONS off)
 
 foreach(level MAJOR MINOR PATCH)
@@ -9,26 +9,38 @@ foreach(level MAJOR MINOR PATCH)
     endif()
     string(REGEX MATCH "([0-9]+)" cyan_version_${level} "${cyan_${level}}")
 endforeach()
-set(CYAN_VERSION_STRING "${cyan_version_MAJOR}.${cyan_version_MINOR}.${cyan_version_PATCH}")
 
-project(cyan VERSION ${CYAN_VERSION_STRING} LANGUAGES CXX)
+project(cyan VERSION "${cyan_version_MAJOR}.${cyan_version_MINOR}.${cyan_version_PATCH}" LANGUAGES CXX)
 include(CTest)
 
 add_library(cyan INTERFACE)
 add_library(Cyan::Cyan ALIAS cyan)
-target_include_directories(cyan INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 if(MSVC)
-    target_compile_options(cyan INTERFACE /bigobj
-                                          /utf-8
-                                          /permissive-
-                                          /Zc:preprocessor
-                                          /Zc:__cplusplus
-                                          )
+    target_compile_options(cyan INTERFACE
+        /options:strict
+        /bigobj
+        /utf-8
+        /permissive-
+        /Zc:preprocessor
+        /Zc:__cplusplus
+        /Zc:checkGwOdr
+    )
 endif()
 
+target_compile_definitions(cyan INTERFACE
+    $<$<CONFIG:Debug>:
+        CYAN_DEBUG=
+    >
+)
+
+target_include_directories(cyan INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/source")
 target_compile_features(cyan INTERFACE cxx_std_26)
 
 if(BUILD_TESTING)
     add_subdirectory(test)
+endif()
+
+if(BUILD_BENCHMARKING)
+    add_subdirectory(benchmark)
 endif()
