@@ -74,6 +74,8 @@ See [$identifiers](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2026/p423
 
 When `$unreliable` is used, you may have to manually disable GCC shadowing in order for it to work without warnings/errors. `$gcc_ignore_shadowing` and `$gcc_restore_shadowing` are provided to help developers shortcut this.
 
+By doing this, you will have to manually check that the rest of the parameters aren't shadowing another name in the parent scope.
+
 We apologize for the inconvenience.
 
 We believe GCC could benefit from more granular diagnostic controls. MSVC and Clang already allow this. We encourage the community to propose an enhancement to the GCC compiler team.
